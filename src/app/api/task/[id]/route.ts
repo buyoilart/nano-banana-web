@@ -1,4 +1,3 @@
-cat << 'EOF' > "src/app/api/task/[id]/route.ts"
 import { NextResponse } from "next/server";
 import { evolinkGetTask } from "@/lib/evolink";
 
@@ -20,4 +19,3 @@ export async function GET(
     return new NextResponse(e?.message ?? "Server error", { status: 500 });
   }
 }
-EOF
