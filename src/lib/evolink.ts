@@ -133,12 +133,26 @@ export async function evolinkCreateTaskWithFallback(
 }
 
 export async function evolinkGetTask(taskId: string): Promise<TaskResult> {
-  const res = await fetch(`${BASE_URL}/tasks/${taskId}`, {
+  if (!taskId) {
+    throw new Error("Missing taskId");
+  }
+
+  const url = `${BASE_URL}/tasks/${taskId}`;
+  console.log("[evolinkGetTask] GET", url);
+
+  const res = await fetch(url, {
     headers: { Authorization: `Bearer ${API_KEY}` },
   });
   if (!res.ok) {
     const text = await res.text();
+    console.error("[evolinkGetTask] ERROR RESPONSE:", text);
     throw new Error(`Evolink task error: ${res.status} ${text}`);
   }
-  return res.json();
+
+  const json = (await res.json()) as TaskResult;
+  console.log(
+    "[evolinkGetTask] RAW RESPONSE:",
+    JSON.stringify(json, null, 2)
+  );
+  return json;
 }
